@@ -10,12 +10,13 @@ public class Rating {
     private MediaEntry mediaEntry;
     private int stars;
     private String comment;
+    private String id;
     private User creator;
     private LocalDateTime localDate;
     private List<User> likes = new ArrayList<>();
-    private int id;
 
-    public Rating(MediaEntry mediaEntry, int stars, String comment, User creator) {
+    public Rating(String id, MediaEntry mediaEntry, int stars, String comment, User creator) {
+        this.id = id;
         this.mediaEntry = mediaEntry;
         this.stars = stars;
         this.comment = comment;
@@ -71,11 +72,11 @@ public class Rating {
         this.likes = likes;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

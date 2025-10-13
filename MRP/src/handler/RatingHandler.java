@@ -15,7 +15,7 @@ public class RatingHandler {
         this.ratingService = ratingService;
     }
 
-    public void likeRating(User user, int ratingID) {
+    public void likeRating(User user, String ratingID) {
         this.ratingService.likeRating(user, ratingID);
     }
 
@@ -25,18 +25,18 @@ public class RatingHandler {
         }
     }
 
-    public void unlikeRating(User user, int ratingID) {
+    public void unlikeRating(User user, String ratingID) {
         this.ratingService.unlikeRating(user, ratingID);
     }
 
-    void editRating(int mediaEntryID, int stars, String comment, User creator, int ratingID) {
-        if (mediaEntryID != 0 && creator != null && ratingID != 0) {
+    void editRating(String mediaEntryID, int stars, String comment, User creator, String ratingID) {
+        if (!mediaEntryID.isBlank() && creator != null && !ratingID.isBlank()) {
             // Hier noch checken, ob der User auch wirklich der Creator ist
             this.ratingService.editRating(ratingID, stars, comment);
         }
     }
-    void deleteRating(User user, int mediaEntryID) {
-        if(user != null && mediaEntryID != 0) {
+    void deleteRating(User user, String mediaEntryID) {
+        if(user != null && !mediaEntryID.isBlank()) {
             // Hier noch checken, ob der User auch wirklich der Creator ist
             this.ratingService.deleteRating(mediaEntryID);
         }

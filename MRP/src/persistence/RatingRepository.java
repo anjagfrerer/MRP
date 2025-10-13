@@ -1,10 +1,13 @@
 package persistence;
 
+import model.MediaEntry;
 import model.Rating;
 import model.User;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class RatingRepository implements IRatingRepository {
     private List<Rating> ratings;
@@ -50,7 +53,19 @@ public class RatingRepository implements IRatingRepository {
     }
 
     @Override
-    public void addRating(Rating rating) {
-        this.ratings.add(rating);
+    public Rating getRatingByID(String id) {
+        for (Rating rating : ratings) {
+            if (rating.getId().equals(id)) {
+                return rating;
+            }
+        }
+        return null; // falls kein Rating gefunden wurde
+    }
+
+    @Override
+    public void createRating(User user, int stars, String comment, MediaEntry mediaEntry) {
+        Rating rating = new Rating(UUID.randomUUID().toString(), mediaEntry, stars, comment, user);
+        rating.setLocalDate(LocalDateTime.now());
+        ratings.add(rating);
     }
 }

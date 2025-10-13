@@ -1,5 +1,6 @@
 package persistence;
 
+import model.MediaEntry;
 import model.Rating;
 import model.User;
 
@@ -12,5 +13,6 @@ public interface IRatingRepository {
     void deleteRating(Rating rating);
     List<Rating> getRatings();
     void setRatings(List<Rating> ratings);
-    void addRating(Rating rating);
+    Rating getRatingByID(String id);
+    void createRating(User user, int stars, String comment, MediaEntry mediaEntry);
 }

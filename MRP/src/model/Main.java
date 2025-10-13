@@ -10,6 +10,7 @@ import service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,7 +30,7 @@ public class Main {
         RatingHandler ratingHandler = new RatingHandler(ratingService);
 
         // Log-In und Registrierung testen
-        User admin = new User("admin", "HelloWorld");
+        User admin = new User(UUID.randomUUID().toString(), "admin", "HelloWorld");
         userHandler.register("admin", "HelloWorld");
         boolean loggedIn = userservice.login("admin", "HelloWorld");
         System.out.println(loggedIn);

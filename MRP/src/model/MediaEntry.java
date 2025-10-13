@@ -5,11 +5,17 @@ import java.util.List;
 
 public class MediaEntry {
 
-    private String title, description, mediatype;
-    private List<String> genres = new ArrayList<>();
-    private int releaseYear, agerestriction, avgscore, id;
+    private String title;
+    private String description;
+    private String mediatype;
+    private String id;
+    private int releaseYear;
+    private int agerestriction;
+    private int avgscore;
+    private boolean favorite;
     private User creator; // to assign each entry to a user (just creator can delete/edit)
     private List<Rating> ratings = new ArrayList<>(); //!
+    private List<String> genres = new ArrayList<>();
 
     public MediaEntry(String title, String description, String mediatype, List<String> genres, int releaseYear, int agerestriction, User creator) {
         this.title = title;
@@ -19,13 +25,14 @@ public class MediaEntry {
         this.agerestriction = agerestriction;
         this.creator = creator;
         this.genres = genres;
+        this.favorite = false;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -35,6 +42,14 @@ public class MediaEntry {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
     }
 
     public String getDescription() {

@@ -4,24 +4,19 @@ import model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class UserRepository implements IUserRepository {
     private List<User> registeredUsers;
-    private List<User> loggedInUsers;
+    //private List<User> loggedInUsers;
     private static final UserRepository instance = new UserRepository();
 
     private UserRepository() {
         this.registeredUsers = new ArrayList<>();
-        this.loggedInUsers = new ArrayList<>();
     }
 
     public static UserRepository getInstance() {
         return instance;
-    }
-
-    @Override
-    public void login(String username, String password) {
-        loggedInUsers.add(new User(username, password));
     }
 
     @Override
@@ -30,7 +25,15 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public void register(String username, String password) {
-        registeredUsers.add(new User(username, password));
+    public void createUser(String username, String password) {
+        registeredUsers.add(new User(UUID.randomUUID().toString(), username, password));
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return registeredUsers.stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
     }
 }

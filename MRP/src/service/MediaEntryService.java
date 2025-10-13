@@ -4,19 +4,18 @@ import model.MediaEntry;
 import model.User;
 import persistence.IMediaEntryRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MediaEntryService implements IMediaEntryService{
+public class MediaEntryService implements IMediaEntryService {
     private static MediaEntryService instance;
-    private IMediaEntryRepository mediaEntryRepository;
+    private final IMediaEntryRepository mediaEntryRepository;
 
-    public MediaEntryService(IMediaEntryRepository mediaEntryRepository) {
+    private MediaEntryService(IMediaEntryRepository mediaEntryRepository) {
         this.mediaEntryRepository = mediaEntryRepository;
     }
 
     public static MediaEntryService getInstance(IMediaEntryRepository mediaEntryRepository) {
-        if(instance == null){
+        if (instance == null) {
             instance = new MediaEntryService(mediaEntryRepository);
         }
         return instance;
@@ -28,50 +27,34 @@ public class MediaEntryService implements IMediaEntryService{
     }
 
     @Override
-    public void editMediaEntry(int mediaEntryId, String title, String description, String mediatype, List<String> genres, int releaseYear, int agerestriction, User creator) {
-        List<MediaEntry> mediaEntries = mediaEntryRepository.getALlMediaEntries();
-        for(MediaEntry mediaEntry : mediaEntries){
-            if(mediaEntry.getId() == mediaEntryId){
-                // Derzeit noch mit remove und add -> später über Datenbank verändern
-                mediaEntryRepository.deleteMediaEntry(title, mediatype);
-                mediaEntryRepository.addMediaEntry(new MediaEntry(title, description, mediatype, genres, releaseYear, agerestriction, creator));
-            }
+    public void editMediaEntry(String mediaEntryId, String title, String description, String mediatype,
+                               List<String> genres, int releaseYear, int agerestriction, User creator) {
+
+        MediaEntry mediaEntry = mediaEntryRepository.getMediaEntryByID(mediaEntryId);
+        if (mediaEntry != null) {
+            mediaEntryRepository.updateMediaEntry(mediaEntryId, title, description, mediatype,
+                    genres, releaseYear, agerestriction, creator);
         }
     }
 
     @Override
     public void deleteMediaEntry(String title, String mediaType) {
-        List<MediaEntry> mediaEntries = new ArrayList<>(mediaEntryRepository.getALlMediaEntries());
-        for (MediaEntry mediaEntry : mediaEntries) {
-            if (mediaEntry.getTitle().equals(title) && mediaEntry.getMediatype().equals(mediaType)) {
-                mediaEntryRepository.deleteMediaEntry(mediaEntry.getTitle(), mediaEntry.getMediatype());
-            }
+        mediaEntryRepository.deleteMediaEntry(title, mediaType);
+    }
+
+    @Override
+    public void favoriteMediaEntry(String mediaEntryId) {
+        MediaEntry mediaEntry = mediaEntryRepository.getMediaEntryByID(mediaEntryId);
+        if (mediaEntry != null) {
+            mediaEntryRepository.setFavoriteStatus(mediaEntryId, true);
         }
     }
 
     @Override
-    public void favoriteMediaEntry(int mediaEntryId) {
-        List<MediaEntry> mediaEntries = mediaEntryRepository.getALlMediaEntries();
-        for(MediaEntry mediaEntry : mediaEntries){
-            if(mediaEntry.getId() == mediaEntryId){
-                // Derzeit noch mit remove und add -> später über Datenbank verändern
-                mediaEntryRepository.deleteMediaEntry(mediaEntry.getTitle(), mediaEntry.getMediatype());
-                mediaEntryRepository.addMediaEntry(new MediaEntry(mediaEntry.getTitle(), mediaEntry.getDescription(),
-                        mediaEntry.getMediatype(), mediaEntry.getGenres(), mediaEntry.getReleaseYear(), mediaEntry.getAgerestriction(), mediaEntry.getCreator()));
-            }
-        }
-    }
-
-    @Override
-    public void unFavoriteMediaEntry(int mediaEntryId) {
-        List<MediaEntry> mediaEntries = mediaEntryRepository.getALlMediaEntries();
-        for(MediaEntry mediaEntry : mediaEntries){
-            if(mediaEntry.getId() == mediaEntryId){
-                // Derzeit noch mit remove und add -> später über Datenbank verändern
-                mediaEntryRepository.deleteMediaEntry(mediaEntry.getTitle(), mediaEntry.getMediatype());
-                mediaEntryRepository.addMediaEntry(new MediaEntry(mediaEntry.getTitle(), mediaEntry.getDescription(),
-                        mediaEntry.getMediatype(), mediaEntry.getGenres(), mediaEntry.getReleaseYear(), mediaEntry.getAgerestriction(), mediaEntry.getCreator()));
-            }
+    public void unFavoriteMediaEntry(String mediaEntryId) {
+        MediaEntry mediaEntry = mediaEntryRepository.getMediaEntryByID(mediaEntryId);
+        if (mediaEntry != null) {
+            mediaEntryRepository.setFavoriteStatus(mediaEntryId, false);
         }
     }
 }

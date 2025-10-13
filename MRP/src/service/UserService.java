@@ -2,17 +2,18 @@ package service;
 
 import model.User;
 import persistence.IUserRepository;
-import persistence.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserService implements IUserService {
     private static UserService instance;
+    private final List<User> loggedInUsers;
     private IUserRepository userRepository;
 
     private UserService(IUserRepository userRepository) {
         this.userRepository = userRepository;
+        this.loggedInUsers = new ArrayList<>();
     }
 
     public static UserService getInstance(IUserRepository repository) {
@@ -22,13 +23,12 @@ public class UserService implements IUserService {
 
     @Override
     public boolean login(String username, String password) {
-        List<User> allUsers = userRepository.getAllUsers();
-        for (User u : allUsers) {
-            if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
-                userRepository.login(username, password);
-                return true;
-            }
+        if (checkPassword(username, password)) {
+            User found = userRepository.getUserByUsername(username);
+            loggedInUsers.add(found);
+            return true;
         }
+
         return false;
     }
 
@@ -40,12 +40,16 @@ public class UserService implements IUserService {
                 return false;
             }
         }
-        userRepository.register(username, password);
+        userRepository.createUser(username, password);
         return true;
     }
 
-    @Override
-    public void output(User user) {
-
+    public boolean checkPassword(String username, String password) {
+        User found = userRepository.getUserByUsername(username);
+        if (found != null) {
+            return found.getPassword().equals(password);
+        } else {
+            return false;
+        }
     }
 }

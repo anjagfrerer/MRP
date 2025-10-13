@@ -4,26 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-    private int userid;
+    private String userid;
     private String username;
     private final String password;
     private int interactions; //to view leaderbord of most active users
     private List<MediaEntry> favorites;
     private List<Rating> ratings; //!
 
-    public User(String username, String password) {
+    public User(String id, String username, String password) {
         this.username = username;
         this.password = password;
         this.interactions = 0;
         this.favorites = new ArrayList<>();
         this.ratings = new ArrayList<>();
+        this.userid = id;
     }
 
-    public int getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(String userid) {
         this.userid = userid;
     }
 
