@@ -1,40 +1,55 @@
 package handler;
 
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import controller.UserController;
 import model.User;
+import restserver.http.Method;
+import restserver.server.Request;
+import restserver.server.Response;
 import service.IUserService;
 import service.UserService;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
-public class UserHandler {
+public class UserHandler implements HttpHandler {
 
     private final IUserService userService;
+    private UserController userController;
 
     public UserHandler(UserService userService) {
         this.userService = userService;
+        this.userController = UserController.getInstance(userService);
     }
 
-    public boolean login(String username, String password) {
-        if (validate(username, password)) return false;
-        return userService.login(username, password);
-    }
+    @Override
+    public void handle(HttpExchange httpExchange) {
+        try{
+            Request request = new Request(httpExchange.getRequestURI());
+            Response response = null;
+            String requestBody = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
-    public boolean register(String username, String password) {
-        if (validate(username, password)) return false;
-        return userService.registerUser(username, password);
-    }
+            // Login
+            if(httpExchange.getRequestMethod().equals(Method.POST.name()) &&
+                    request.getPathParts().size() > 2 &&
+                    request.getPathParts().get(2).equalsIgnoreCase("login")){
+                response = this.userController.login(requestBody);
+            }
+            // Register
+            else if (httpExchange.getRequestMethod().equals(Method.POST.name()) &&
+                    request.getPathParts().size() > 2 &&
+                    request.getPathParts().get(2).equalsIgnoreCase("register")){
+                response = this.userController.register(requestBody);
+            }
 
-    public String generateToken(User user) {
-        return user.getUsername() + "-mrpToken";
-    }
+            response.send(httpExchange);
 
-    private static boolean validate(String username, String password) {
-        //validate input parameter
-        if (username == null) {
-            return true;
+        }catch (IOException e){
+            throw new RuntimeException(e);
         }
-        if (password == null) {
-            return true;
-        }
-        return password.isBlank();
     }
 
     public void editProfile(User user, String username, String password) {

@@ -6,7 +6,7 @@ import java.util.List;
 public class User {
     private String userid;
     private String username;
-    private final String password;
+    private String password;
     private int interactions; //to view leaderbord of most active users
     private List<MediaEntry> favorites;
     private List<Rating> ratings; //!
@@ -18,6 +18,9 @@ public class User {
         this.favorites = new ArrayList<>();
         this.ratings = new ArrayList<>();
         this.userid = id;
+    }
+
+    public User() {
     }
 
     public String getUserid() {

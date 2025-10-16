@@ -1,13 +1,16 @@
 package handler;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import model.MediaEntry;
 import model.User;
 import service.IMediaEntryService;
 import service.MediaEntryService;
 
+import java.io.IOException;
 import java.util.List;
 
-public class MediaEntryHandler {
+public class MediaEntryHandler implements HttpHandler {
 
     private final IMediaEntryService mediaEntryService;
 
@@ -27,5 +30,10 @@ public class MediaEntryHandler {
         if(title!=null) {
             mediaEntryService.deleteMediaEntry(title, mediaType);
         }
+    }
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+
     }
 }

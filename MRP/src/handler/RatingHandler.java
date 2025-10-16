@@ -1,5 +1,7 @@
 package handler;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import model.MediaEntry;
 import model.Rating;
 import model.User;
@@ -8,7 +10,9 @@ import persistence.RatingRepository;
 import service.IRatingService;
 import service.RatingService;
 
-public class RatingHandler {
+import java.io.IOException;
+
+public class RatingHandler implements HttpHandler {
     private final IRatingService ratingService;
 
     public RatingHandler(RatingService ratingService) {
@@ -40,5 +44,10 @@ public class RatingHandler {
             // Hier noch checken, ob der User auch wirklich der Creator ist
             this.ratingService.deleteRating(mediaEntryID);
         }
+    }
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+
     }
 }
